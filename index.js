@@ -40,6 +40,7 @@ function start() {
           'Add a role',
           'Add an employee',
           'Add an employee role',
+          'Update an employee role',
           'Exit',
         ],
       },
@@ -262,14 +263,31 @@ const updateEmployeeRole = () => {
         const query = 'UPDATE employee SET role_id = ? WHERE id = ?';
         const values = [answer.newRoleId, answer.employeeId];
 
-        pool.query(query, values, (err, res) => {
-          if (err) {
-            reject(err);
-          } else {
+        pool
+          .query(query, values)
+          .then(() => {
             console.log('Employee role updated successfully!');
-            resolve();
-          }
-        });
+
+            // Retrieve the updated employee information
+            const selectQuery = `SELECT employee.id, employee.first_name, employee.last_name, role.title
+            FROM employee
+            JOIN role ON employee.role_id = role.id
+            WHERE employee.id = ?;`;
+            const selectValues = [answer.employeeId];
+            pool
+              .query(selectQuery, selectValues)
+              .then(([result]) => {
+                console.log('Updated employee information:');
+                console.table(result);
+                resolve();
+              })
+              .catch((error) => {
+                reject(error);
+              });
+          })
+          .catch((error) => {
+            reject(error);
+          });
       })
       .catch((error) => {
         reject(error);
