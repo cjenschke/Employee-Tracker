@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const connection = require('./db');
 const pool = require('./db');
 const {
   viewDepartments,

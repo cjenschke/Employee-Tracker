@@ -98,7 +98,7 @@ const addEmployee = () => {
           name: 'managerId',
           type: 'input',
           message: "Enter the employee's manager ID (leave blank if none):",
-          default: null,
+          default: '',
         },
       ])
       .then((answer) => {
@@ -115,9 +115,30 @@ const addEmployee = () => {
             reject(err);
           } else {
             console.log('Employee added successfully!');
-            resolve();
+            const selectQuery = `
+            SELECT employee.id, employee.first_name, employee.last_name, role.title
+            FROM employee
+            JOIN role ON employee.role_id = role.id
+            WHERE employee.id = ?;
+          `;
+            const selectValues = [res.insertId];
+            pool.query(selectQuery, selectValues, (selectErr, selectRes) => {
+              if (selectErr) {
+                reject(selectErr);
+              } else {
+                console.log('Updated employee information:');
+                console.table(selectRes);
+                resolve();
+              }
+            });
           }
         });
+      })
+      .then(() => {
+        return viewEmployees();
+      })
+      .then(() => {
+        resolve();
       })
       .catch((error) => {
         reject(error);
@@ -204,6 +225,10 @@ const updateEmployeeRole = () => {
       });
   });
 };
+// Function to start the application
+const start = () => {
+  console.log('Application started');
+};
 
 module.exports = {
   viewDepartments,
@@ -213,4 +238,5 @@ module.exports = {
   addEmployee,
   addEmployeeRole,
   updateEmployeeRole,
+  start,
 };
