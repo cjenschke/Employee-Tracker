@@ -157,28 +157,62 @@ const addEmployee = () => {
 // Function to add an employee role
 const addEmployeeRole = () => {
   return new Promise((resolve, reject) => {
-    inquirer
-      .prompt([
-        {
-          name: 'name',
-          type: 'input',
-          message: 'Enter the employee role you want to add:',
-        },
-      ])
-      .then((answer) => {
-        pool
-          .query('INSERT INTO role SET ?', { name: answer.name })
-          .then(() => {
-            console.log('Employee role add successfully!');
-            resolve();
+    pool.query('SELECT * FROM department', (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        const departments = results.map((department) => ({
+          name: department.name,
+          value: department.id,
+        }));
+
+        inquirer
+          .prompt([
+            {
+              name: 'title',
+              type: 'input',
+              message: 'Enter the role you want to add:',
+            },
+            {
+              name: 'salary',
+              type: 'input',
+              message: 'Enter the salary for the new role:',
+            },
+            {
+              name: 'department_id',
+              type: 'input',
+              message: 'Which department does the role belong to?:',
+              choices: departments,
+            },
+          ])
+          .then((answer) => {
+            pool
+              .query('INSERT INTO role SET ?', {
+                title: answer.title,
+                salary: answer.salary,
+                department_id: answer.department_id,
+              })
+              .then(() => {
+                console.log('Employee role add successfully!');
+                setTimeout(() => {
+                  viewRoles()
+                    .then(() => {
+                      resolve();
+                    })
+                    .catch((error) => {
+                      reject(error);
+                    });
+                }, 1000);
+              })
+              .catch((error) => {
+                reject(error);
+              });
           })
           .catch((error) => {
             reject(error);
           });
-      })
-      .catch((error) => {
-        reject(error);
-      });
+      }
+    });
   });
 };
 
