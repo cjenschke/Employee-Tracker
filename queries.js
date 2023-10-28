@@ -62,7 +62,15 @@ const addDepartment = () => {
           .query('INSERT INTO department SET ?', { name: answer.name })
           .then(() => {
             console.log('Department added successfully!');
-            resolve();
+            setTimeout(() => {
+              viewDepartments()
+                .then(() => {
+                  resolve();
+                })
+                .catch((error) => {
+                  reject(error);
+                });
+            }, 1000);
           })
           .catch((error) => {
             reject(error);
