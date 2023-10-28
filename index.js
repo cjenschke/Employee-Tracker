@@ -72,6 +72,11 @@ function start() {
             .catch((error) => console.error(error));
           break;
         case 'Add an employee role':
+          addEmployeeRole()
+            .then(() => start())
+            .catch((error) => console.error(error));
+          break;
+        case 'Update an employee role':
           updateEmployeeRole()
             .then(() => start())
             .catch((error) => console.error(error));
@@ -89,7 +94,7 @@ function start() {
 const viewDepartments = () => {
   return new Promise((resolve, reject) => {
     pool
-      .query('SELECT * FROM departments')
+      .query('SELECT * FROM department')
       .then(([results]) => {
         console.table(results);
         resolve();
@@ -143,7 +148,7 @@ const addDepartment = () => {
       ])
       .then((answer) => {
         pool
-          .query('INSERT INTO departments SET ?', { name: answer.name })
+          .query('INSERT INTO department SET ?', { name: answer.name })
           .then(() => {
             console.log('Department added successfully!');
             resolve();
@@ -157,6 +162,7 @@ const addDepartment = () => {
       });
   });
 };
+
 // Function to add an employee
 const addEmployee = () => {
   return new Promise((resolve, reject) => {
@@ -208,7 +214,35 @@ const addEmployee = () => {
   });
 };
 
-// Function to add an employee's role
+// Function to add an employee role
+const addEmployeeRole = () => {
+  return new Promise((resolve, reject) => {
+    inquirer
+      .prompt([
+        {
+          name: 'name',
+          type: 'input',
+          message: 'Enter the employee role you want to add:',
+        },
+      ])
+      .then((answer) => {
+        pool
+          .query('INSERT INTO role SET ?', { name: answer.name })
+          .then(() => {
+            console.log('Employee role add successfully!');
+            resolve();
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+// Function to update an employee's role
 const updateEmployeeRole = () => {
   return new Promise((resolve, reject) => {
     inquirer
