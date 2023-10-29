@@ -154,64 +154,73 @@ const addEmployee = () => {
   });
 };
 
+// Function to retrieve departments
+const getDepartments = () => {
+  return new Promise((resolve, reject) => {
+    pool
+      .query('SELECT * FROM department')
+      .then(([results]) => {
+        resolve(results);
+      })
+      .catch((error) => {
+        reject(errors);
+      });
+  });
+};
+
 // Function to add an employee role
 const addEmployeeRole = () => {
   return new Promise((resolve, reject) => {
-    pool.query('SELECT * FROM department', (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        const departments = results.map((department) => ({
-          name: department.name,
-          value: department.id,
-        }));
-
-        inquirer
-          .prompt([
-            {
-              name: 'title',
-              type: 'input',
-              message: 'Enter the role you want to add:',
-            },
-            {
-              name: 'salary',
-              type: 'input',
-              message: 'Enter the salary for the new role:',
-            },
-            {
-              name: 'department_id',
-              type: 'input',
-              message: 'Which department does the role belong to?:',
-              choices: departments,
-            },
-          ])
-          .then((answer) => {
-            pool
-              .query('INSERT INTO role SET ?', {
-                title: answer.title,
-                salary: answer.salary,
-                department_id: answer.department_id,
-              })
-              .then(() => {
-                console.log('Employee role add successfully!');
-                setTimeout(() => {
-                  viewRoles()
-                    .then(() => {
-                      resolve();
-                    })
-                    .catch((error) => {
-                      reject(error);
-                    });
-                }, 1000);
-              })
-              .catch((error) => {
-                reject(error);
-              });
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      }
+    getDepartments().then((departments) => {
+      const departmentChoices = departments.map((department) => ({
+        name: department.name,
+        value: department.id,
+      }));
+      inquirer
+        .prompt([
+          {
+            name: 'title',
+            type: 'input',
+            message: 'Enter the role you want to add:',
+          },
+          {
+            name: 'salary',
+            type: 'input',
+            message: 'Enter the salary for the new role:',
+          },
+          {
+            name: 'department_id',
+            type: 'list',
+            message: 'Which department does the role belong to?:',
+            choices: departmentChoices,
+          },
+        ])
+        .then((answer) => {
+          pool
+            .query('INSERT INTO role SET ?', {
+              title: answer.title,
+              salary: answer.salary,
+              department_id: answer.department_id,
+            })
+            .then(() => {
+              console.log('Employee role add successfully!');
+              setTimeout(() => {
+                viewRoles()
+                  .then(() => {
+                    resolve();
+                  })
+                  .catch((error) => {
+                    reject(error);
+                  });
+              }, 1000);
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
   });
 };

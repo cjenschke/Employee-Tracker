@@ -7,6 +7,7 @@ const {
   viewEmployees,
   addDepartment,
   addEmployee,
+  getDepartments,
   addEmployeeRole,
   updateEmployeeRole,
 } = require('./queries');
