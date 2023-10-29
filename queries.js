@@ -136,17 +136,33 @@ const addEmployee = () => {
               } else {
                 console.log('Updated employee information:');
                 console.table(selectRes);
-                resolve();
+
+                // Display updated employee table
+                setTimeout(() => {
+                  viewEmployees()
+                    .then(() => {
+                      resolve();
+                    })
+                    .catch((error) => {
+                      reject(error);
+                    });
+                }, 1000);
               }
             });
           }
         });
       })
       .then(() => {
-        return viewEmployees();
-      })
-      .then(() => {
-        resolve();
+        // Display updated employee table
+        setTimeout(() => {
+          viewEmployees()
+            .then(() => {
+              resolve();
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        }, 1000);
       })
       .catch((error) => {
         reject(error);
