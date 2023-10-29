@@ -2,7 +2,7 @@
 
 ![Screenshot](./assets/images/ET%20image%201.png)
 
-![Screenshot](./assets/images/ET%20image%202.png.png)
+![Screenshot](./assets/images/ET%20image%202.png)
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 

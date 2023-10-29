@@ -1,6 +1,11 @@
+// Import the inquirer library
 const inquirer = require('inquirer');
+
+// Import the db connection
 const connection = require('./db');
 const pool = require('./db');
+
+// Import functions for db
 const {
   viewDepartments,
   viewRoles,
@@ -11,6 +16,7 @@ const {
   updateEmployeeRole,
 } = require('./queries');
 
+// Start function to initialize application
 const start = () => {
   inquirer
     .prompt([
@@ -23,7 +29,6 @@ const start = () => {
           'View all roles',
           'View all employees',
           'Add a department',
-          'Add a role',
           'Add an employee',
           'Add an employee role',
           'Update an employee role',
@@ -77,4 +82,5 @@ const start = () => {
     });
 };
 
+// Export start function
 module.exports = { start };

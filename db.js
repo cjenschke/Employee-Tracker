@@ -1,6 +1,9 @@
+// Import the required library for MySQL database connection
 const mysql = require('mysql2/promise');
+// Load environment variables from .env file
 require('dotenv').config();
 
+// Assign the values from .env file
 DB_USER = process.env.DB_USER;
 DB_PASSWORD = process.env.DB_PASSWORD;
 
@@ -12,5 +15,5 @@ const pool = mysql.createPool({
   password: DB_PASSWORD,
   database: 'employee_tracker_db',
 });
-// let connection;
+// Export the db connection
 module.exports = pool;

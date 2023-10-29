@@ -1,4 +1,7 @@
+// Import inquirer library
 const inquirer = require('inquirer');
+
+// Import the pool object for db queries
 const pool = require('./db');
 
 // Function to view all departments
@@ -297,6 +300,7 @@ const start = () => {
   console.log('Application started');
 };
 
+// Export functions and start function for other modules
 module.exports = {
   viewDepartments,
   viewRoles,

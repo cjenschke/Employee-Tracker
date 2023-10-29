@@ -4,12 +4,13 @@ CREATE DATABASE employee_tracker_db;
 -- Choose database
 USE employee_tracker_db;
 
--- Create tables
+-- Create table for departments
 CREATE TABLE department(
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30)
 );
 
+-- Create a table for roles
 CREATE TABLE role(
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(30),
@@ -18,6 +19,7 @@ CREATE TABLE role(
     FOREIGN KEY (department_id) REFERENCES department(id)
 );
 
+-- Create table for employees
 CREATE TABLE employee(
     id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(30),
